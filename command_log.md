@@ -36,4 +36,4 @@ curl -sS \
 
 curl -sS \
   -H "Authorization: Bearer 080eb21cd814" \
-  "https://latest-ai-flow-273bc72f-2749-43bc-9797-7c8f-9409cbfa.crewai.com/status/f2d8861f-3c90-4659-9efa-a446e30953c9" | jq .
+  "https://latest-ai-flow-273bc72f-2749-43bc-9797-7c8f-9409cbfa.crewai.com/status/5d2b29ad-8178-45d7-b0f3-b15b689ae316" | jq .
