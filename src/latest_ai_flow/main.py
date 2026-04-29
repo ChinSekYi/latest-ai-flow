@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-from pathlib import Path
 import os
-
-from pydantic import BaseModel
+from pathlib import Path
 
 from crewai.flow import Flow, listen, start
+from pydantic import BaseModel
 
 from latest_ai_flow.crews.content_crew.content_crew import ContentCrew
 
@@ -31,7 +30,9 @@ class ContentFlow(Flow[ContentState]):
             print("OPENROUTER_API_KEY not found in environment")
 
         if crewai_trigger_payload:
-            self.state.topic = crewai_trigger_payload.get("topic", "Asian literature 2026")
+            self.state.topic = crewai_trigger_payload.get(
+                "topic", "Asian literature 2026"
+            )
             print(f"Using trigger payload: {crewai_trigger_payload}")
         else:
             self.state.topic = "Asian literature 2026"
@@ -41,11 +42,7 @@ class ContentFlow(Flow[ContentState]):
     @listen(plan_content)
     def generate_content(self):
         print(f"Generating content on: {self.state.topic}")
-        result = (
-            ContentCrew()
-            .crew()
-            .kickoff(inputs={"topic": self.state.topic})
-        )
+        result = ContentCrew().crew().kickoff(inputs={"topic": self.state.topic})
 
         print("Content generated")
         self.state.final_post = result.raw
@@ -79,7 +76,9 @@ def run_with_trigger():
 
     # Get trigger payload from command line argument
     if len(sys.argv) < 2:
-        raise Exception("No trigger payload provided. Please provide JSON payload as argument.")
+        raise Exception(
+            "No trigger payload provided. Please provide JSON payload as argument."
+        )
 
     try:
         trigger_payload = json.loads(sys.argv[1])
