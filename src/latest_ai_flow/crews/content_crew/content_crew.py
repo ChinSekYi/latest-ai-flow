@@ -22,16 +22,27 @@ class ContentCrew:
     tasks_config = "config/tasks.yaml"
 
     def _openrouter_llm(self) -> LLM:
-        api_key = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")
+        api_key = (
+            os.getenv("OPENROUTER_API_KEY")
+            or os.getenv("OPEN_ROUTER_API_KEY")
+            or os.getenv("OPENAI_API_KEY")
+        )
+        if api_key:
+            api_key = api_key.strip().strip('"').strip("'")
         if not api_key:
             raise ValueError(
                 "Missing API key. Set OPENROUTER_API_KEY (or OPENAI_API_KEY) in environment."
             )
+        if not api_key.startswith("sk-or-"):
+            raise ValueError(
+                "OpenRouter API key looks invalid for this deployment. "
+                "Expected key prefix 'sk-or-'."
+            )
 
-        # Keep both env names synced so OpenAI-compatible routing paths
-        # (used by some SDK/provider integrations) always receive auth.
-        os.environ.setdefault("OPENROUTER_API_KEY", api_key)
-        os.environ.setdefault("OPENAI_API_KEY", api_key)
+        # Force env names to the same non-empty key so OpenAI-compatible
+        # paths always send Authorization headers.
+        os.environ["OPENROUTER_API_KEY"] = api_key
+        os.environ["OPENAI_API_KEY"] = api_key
 
         model = (
             os.getenv("OPENROUTER_MODEL")
@@ -41,9 +52,15 @@ class ContentCrew:
         )
         base_url = (
             os.getenv("OPENROUTER_BASE_URL")
+            or os.getenv("OPENROUTER_API_BASE")
             or os.getenv("OPENAI_API_BASE")
             or "https://openrouter.ai/api/v1"
         )
+        base_url = base_url.strip().strip('"').strip("'")
+        os.environ["OPENROUTER_API_BASE"] = base_url
+
+        if "openrouter.ai" in base_url and not model.startswith("openrouter/"):
+            model = f"openrouter/{model}"
 
         return LLM(
             model=model,

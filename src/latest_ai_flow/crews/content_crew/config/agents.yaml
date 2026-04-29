@@ -3,7 +3,6 @@ planner:
     Content Planner
   goal: >
     Plan a detailed and engaging blog post outline on {topic}
-  llm: openrouter/meta-llama/llama-3-8b-instruct
   backstory: >
     You're an experienced content strategist who excels at creating
     structured outlines for blog posts. You know how to organize ideas
@@ -15,7 +14,6 @@ writer:
   goal: >
     Write a compelling and well-structured blog post on {topic}
     based on the provided outline
-  llm: openrouter/meta-llama/llama-3-8b-instruct
   backstory: >
     You're a skilled writer with a talent for turning outlines into
     engaging, informative blog posts. Your writing is clear, conversational,
@@ -28,7 +26,6 @@ editor:
   goal: >
     Review and polish the blog post on {topic} to ensure it is
     publication-ready
-  llm: openrouter/meta-llama/llama-3-8b-instruct
   backstory: >
     You're a meticulous editor with years of experience refining written
     content. You have an eye for clarity, flow, grammar, and consistency.

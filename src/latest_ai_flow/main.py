@@ -21,13 +21,18 @@ class ContentFlow(Flow[ContentState]):
     def plan_content(self, crewai_trigger_payload: dict = None):
         print("Planning content")
 
-        # Debug: print masked prefix of OPENROUTER_API_KEY so we can
-        # confirm whether the deployed runtime sees the secret (masked).
+        # Debug: print masked prefix of provider keys so we can confirm
+        # whether deployed runtime receives secrets (without exposing them).
         ork = os.getenv("OPENROUTER_API_KEY")
+        oak = os.getenv("OPENAI_API_KEY")
         if ork:
             print(f"OPENROUTER_API_KEY present, prefix={ork[:6]}...")
         else:
             print("OPENROUTER_API_KEY not found in environment")
+        if oak:
+            print(f"OPENAI_API_KEY present, prefix={oak[:6]}...")
+        else:
+            print("OPENAI_API_KEY not found in environment")
 
         if crewai_trigger_payload:
             self.state.topic = crewai_trigger_payload.get(
