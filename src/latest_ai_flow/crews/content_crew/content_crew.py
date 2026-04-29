@@ -36,6 +36,14 @@ class ContentCrew:
                 break
         if api_key:
             api_key = api_key.strip().strip('"').strip("'")
+            # Deployment UIs sometimes persist a pasted typo with an extra
+            # leading "s" (e.g. "ssk-or-..."). Normalize this safely.
+            if api_key.startswith("ssk-or-"):
+                print(
+                    "Warning: OPENROUTER_API_KEY had unexpected 'ssk-' prefix. "
+                    "Normalizing to 'sk-'."
+                )
+                api_key = api_key[1:]
         if not api_key:
             raise ValueError(
                 "Missing API key. Set OPENROUTER_API_KEY (or OPENAI_API_KEY) in environment. "
