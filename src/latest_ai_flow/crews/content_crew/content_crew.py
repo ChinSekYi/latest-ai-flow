@@ -1,4 +1,5 @@
-from crewai import Agent, Crew, Process, Task
+import os
+from crewai import Agent, Crew, LLM, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.project import CrewBase, agent, crew, task
 
@@ -24,20 +25,38 @@ class ContentCrew:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def planner(self) -> Agent:
+        llm = LLM(
+            model=os.getenv("MODEL", "openrouter/meta-llama/llama-3-8b-instruct"),
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url=os.getenv("OPENROUTER_BASE_URL", "https://api.openrouter.ai"),
+        )
         return Agent(
             config=self.agents_config["planner"],  # type: ignore[index]
+            llm=llm,
         )
 
     @agent
     def writer(self) -> Agent:
+        llm = LLM(
+            model=os.getenv("MODEL", "openrouter/meta-llama/llama-3-8b-instruct"),
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url=os.getenv("OPENROUTER_BASE_URL", "https://api.openrouter.ai"),
+        )
         return Agent(
             config=self.agents_config["writer"],  # type: ignore[index]
+            llm=llm,
         )
 
     @agent
     def editor(self) -> Agent:
+        llm = LLM(
+            model=os.getenv("MODEL", "openrouter/meta-llama/llama-3-8b-instruct"),
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url=os.getenv("OPENROUTER_BASE_URL", "https://api.openrouter.ai"),
+        )
         return Agent(
             config=self.agents_config["editor"],  # type: ignore[index]
+            llm=llm,
         )
 
     # To learn more about structured task outputs,
