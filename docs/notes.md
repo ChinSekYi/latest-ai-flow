@@ -1,0 +1,6 @@
+- Built a CrewAI content-generation flow end-to-end (planning -> writing -> editing -> save output) and deployed it to CrewAI AMP.
+- Defined project architecture and debugging strategy myself (provider routing, env var ownership, deployment checks, API wrapper approach).
+- Used Cursor to speed up boilerplate (file scaffolding, API wiring, repetitive config updates, quick refactors).
+- Kept core logic decisions manual: LLM provider handling, error diagnosis, secret validation strategy, and production-safe token flow.
+- Added a custom Cursor rule in `.cursor/rules/learning-protocol.mdc` so Cursor assists on boilerplate while I own engineering logic.
+- Implemented a FastAPI wrapper so external users call my API, while deployment credentials stay server-side.

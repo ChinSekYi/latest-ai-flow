@@ -45,6 +45,32 @@ This command initializes the latest-ai-flow Flow as defined in your configuratio
 
 This example, unmodified, will run a content creation flow on AI Agents and save the output to `output/post.md`.
 
+## FastAPI Wrapper (for external users)
+
+Use this service to safely expose your deployed CrewAI flow without leaking the deployment bearer token in a frontend.
+
+Set environment variables:
+
+```bash
+export CREWAI_DEPLOYMENT_URL="https://latest-ai-flow-273bc72f-2749-43bc-9797-7c8f-9409cbfa.crewai.com"
+export CREWAI_DEPLOYMENT_TOKEN="<your-deployment-token>"
+```
+
+Run API server:
+
+```bash
+uv run run_api
+```
+
+Available endpoints:
+
+- `GET /health`
+- `POST /kickoff` with body `{"topic":"Asian literature"}`
+- `GET /status/{kickoff_id}`
+- `POST /generate` (kicks off + polls until `COMPLETED`/`FAILED`)
+
+Note: the deployment status path is `/status/...` (not `/stauts/...`).
+
 ## Understanding Your Crew
 
 The latest-ai-flow Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.

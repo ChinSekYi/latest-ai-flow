@@ -3,11 +3,6 @@ from crewai import Agent, Crew, LLM, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.project import CrewBase, agent, crew, task
 
-# If you want to run a snippet of code before or after the crew starts,
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
-
-
 @CrewBase
 class ContentCrew:
     """Content Crew"""
@@ -15,9 +10,6 @@ class ContentCrew:
     agents: list[BaseAgent]
     tasks: list[Task]
 
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
@@ -36,8 +28,6 @@ class ContentCrew:
                 break
         if api_key:
             api_key = api_key.strip().strip('"').strip("'")
-            # Deployment UIs sometimes persist a pasted typo with an extra
-            # leading "s" (e.g. "ssk-or-..."). Normalize this safely.
             if api_key.startswith("ssk-or-"):
                 print(
                     "Warning: OPENROUTER_API_KEY had unexpected 'ssk-' prefix. "
@@ -57,8 +47,6 @@ class ContentCrew:
                 f"Using source={key_source}, value={masked}, length={len(api_key)}."
             )
 
-        # Force env names to the same non-empty key so OpenAI-compatible
-        # paths always send Authorization headers.
         os.environ["OPENROUTER_API_KEY"] = api_key
         os.environ["OPENAI_API_KEY"] = api_key
 
@@ -86,35 +74,24 @@ class ContentCrew:
             base_url=base_url,
         )
 
-    # If you would like to add tools to your crew, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
+    def _build_agent(self, config_key: str) -> Agent:
+        return Agent(
+            config=self.agents_config[config_key],  # type: ignore[index]
+            llm=self._openrouter_llm(),
+        )
+
     @agent
     def planner(self) -> Agent:
-        llm = self._openrouter_llm()
-        return Agent(
-            config=self.agents_config["planner"],  # type: ignore[index]
-            llm=llm,
-        )
+        return self._build_agent("planner")
 
     @agent
     def writer(self) -> Agent:
-        llm = self._openrouter_llm()
-        return Agent(
-            config=self.agents_config["writer"],  # type: ignore[index]
-            llm=llm,
-        )
+        return self._build_agent("writer")
 
     @agent
     def editor(self) -> Agent:
-        llm = self._openrouter_llm()
-        return Agent(
-            config=self.agents_config["editor"],  # type: ignore[index]
-            llm=llm,
-        )
+        return self._build_agent("editor")
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
     @task
     def planning_task(self) -> Task:
         return Task(
@@ -136,12 +113,9 @@ class ContentCrew:
     @crew
     def crew(self) -> Crew:
         """Creates the Content Crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
         return Crew(
-            agents=self.agents,  # Automatically created by the @agent decorator
-            tasks=self.tasks,  # Automatically created by the @task decorator
+            agents=self.agents,
+            tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
         )

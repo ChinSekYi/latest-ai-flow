@@ -7,6 +7,9 @@ requires-python = ">=3.13,<3.14"
 dependencies = [
     "crewai[tools]==1.14.3",
     "crewai[litellm]==1.14.3",
+    "fastapi>=0.115.0",
+    "httpx>=0.28.0",
+    "uvicorn>=0.34.0",
 ]
 
 [project.scripts]
@@ -14,6 +17,7 @@ kickoff = "latest_ai_flow.main:kickoff"
 run_crew = "latest_ai_flow.main:kickoff"
 plot = "latest_ai_flow.main:plot"
 run_with_trigger = "latest_ai_flow.main:run_with_trigger"
+run_api = "latest_ai_flow.api:run_api"
 
 [build-system]
 requires = ["hatchling"]

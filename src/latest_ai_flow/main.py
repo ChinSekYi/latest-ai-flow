@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import os
+import json
+import sys
 from pathlib import Path
 
 from crewai.flow import Flow, listen, start
@@ -20,19 +21,6 @@ class ContentFlow(Flow[ContentState]):
     @start()
     def plan_content(self, crewai_trigger_payload: dict = None):
         print("Planning content")
-
-        # Debug: print masked prefix of provider keys so we can confirm
-        # whether deployed runtime receives secrets (without exposing them).
-        ork = os.getenv("OPENROUTER_API_KEY")
-        oak = os.getenv("OPENAI_API_KEY")
-        if ork:
-            print(f"OPENROUTER_API_KEY present, prefix={ork[:6]}...")
-        else:
-            print("OPENROUTER_API_KEY not found in environment")
-        if oak:
-            print(f"OPENAI_API_KEY present, prefix={oak[:6]}...")
-        else:
-            print("OPENAI_API_KEY not found in environment")
 
         if crewai_trigger_payload:
             self.state.topic = crewai_trigger_payload.get(
@@ -60,6 +48,7 @@ class ContentFlow(Flow[ContentState]):
         with open(output_dir / "post.md", "w") as f:
             f.write(self.state.final_post)
         print("Post saved to output/post.md")
+        return self.state.final_post
 
 
 def kickoff():
@@ -73,32 +62,19 @@ def plot():
 
 
 def run_with_trigger():
-    """
-    Run the flow with trigger payload.
-    """
-    import json
-    import sys
-
-    # Get trigger payload from command line argument
+    """Run the flow with trigger payload."""
     if len(sys.argv) < 2:
-        raise Exception(
+        raise ValueError(
             "No trigger payload provided. Please provide JSON payload as argument."
         )
 
     try:
         trigger_payload = json.loads(sys.argv[1])
     except json.JSONDecodeError:
-        raise Exception("Invalid JSON payload provided as argument")
+        raise ValueError("Invalid JSON payload provided as argument")
 
-    # Create flow and kickoff with trigger payload
-    # The @start() methods will automatically receive crewai_trigger_payload parameter
     content_flow = ContentFlow()
-
-    try:
-        result = content_flow.kickoff({"crewai_trigger_payload": trigger_payload})
-        return result
-    except Exception as e:
-        raise Exception(f"An error occurred while running the flow with trigger: {e}")
+    return content_flow.kickoff({"crewai_trigger_payload": trigger_payload})
 
 
 if __name__ == "__main__":
