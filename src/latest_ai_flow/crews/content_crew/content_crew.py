@@ -21,16 +21,31 @@ class ContentCrew:
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
+    def _openrouter_llm(self) -> LLM:
+        api_key = os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "Missing API key. Set OPENROUTER_API_KEY (or OPENAI_API_KEY) in environment."
+            )
+
+        model = os.getenv("MODEL") or os.getenv(
+            "OPENAI_MODEL_NAME", "openrouter/meta-llama/llama-3-8b-instruct"
+        )
+        base_url = os.getenv("OPENAI_API_BASE") or os.getenv(
+            "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
+        )
+
+        return LLM(
+            model=model,
+            api_key=api_key,
+            base_url=base_url,
+        )
+
     # If you would like to add tools to your crew, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def planner(self) -> Agent:
-        llm = LLM(
-            model="meta-llama/llama-3-8b-instruct",
-            provider="openrouter",
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url="https://api.openrouter.ai",
-        )
+        llm = self._openrouter_llm()
         return Agent(
             config=self.agents_config["planner"],  # type: ignore[index]
             llm=llm,
@@ -38,12 +53,7 @@ class ContentCrew:
 
     @agent
     def writer(self) -> Agent:
-        llm = LLM(
-            model="meta-llama/llama-3-8b-instruct",
-            provider="openrouter",
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url="https://api.openrouter.ai",
-        )
+        llm = self._openrouter_llm()
         return Agent(
             config=self.agents_config["writer"],  # type: ignore[index]
             llm=llm,
@@ -51,12 +61,7 @@ class ContentCrew:
 
     @agent
     def editor(self) -> Agent:
-        llm = LLM(
-            model="meta-llama/llama-3-8b-instruct",
-            provider="openrouter",
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url="https://api.openrouter.ai",
-        )
+        llm = self._openrouter_llm()
         return Agent(
             config=self.agents_config["editor"],  # type: ignore[index]
             llm=llm,
