@@ -26,9 +26,10 @@ class ContentCrew:
     @agent
     def planner(self) -> Agent:
         llm = LLM(
-            model=os.getenv("MODEL", "openrouter/meta-llama/llama-3-8b-instruct"),
+            model="meta-llama/llama-3-8b-instruct",
+            provider="openrouter",
             api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url=os.getenv("OPENROUTER_BASE_URL", "https://api.openrouter.ai"),
+            base_url="https://api.openrouter.ai",
         )
         return Agent(
             config=self.agents_config["planner"],  # type: ignore[index]
@@ -38,9 +39,10 @@ class ContentCrew:
     @agent
     def writer(self) -> Agent:
         llm = LLM(
-            model=os.getenv("MODEL", "openrouter/meta-llama/llama-3-8b-instruct"),
+            model="meta-llama/llama-3-8b-instruct",
+            provider="openrouter",
             api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url=os.getenv("OPENROUTER_BASE_URL", "https://api.openrouter.ai"),
+            base_url="https://api.openrouter.ai",
         )
         return Agent(
             config=self.agents_config["writer"],  # type: ignore[index]
@@ -50,9 +52,10 @@ class ContentCrew:
     @agent
     def editor(self) -> Agent:
         llm = LLM(
-            model=os.getenv("MODEL", "openrouter/meta-llama/llama-3-8b-instruct"),
+            model="meta-llama/llama-3-8b-instruct",
+            provider="openrouter",
             api_key=os.getenv("OPENROUTER_API_KEY"),
-            base_url=os.getenv("OPENROUTER_BASE_URL", "https://api.openrouter.ai"),
+            base_url="https://api.openrouter.ai",
         )
         return Agent(
             config=self.agents_config["editor"],  # type: ignore[index]
