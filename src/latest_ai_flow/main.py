@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from pathlib import Path
+import os
 
 from pydantic import BaseModel
 
@@ -21,11 +22,19 @@ class ContentFlow(Flow[ContentState]):
     def plan_content(self, crewai_trigger_payload: dict = None):
         print("Planning content")
 
+        # Debug: print masked prefix of OPENROUTER_API_KEY so we can
+        # confirm whether the deployed runtime sees the secret (masked).
+        ork = os.getenv("OPENROUTER_API_KEY")
+        if ork:
+            print(f"OPENROUTER_API_KEY present, prefix={ork[:6]}...")
+        else:
+            print("OPENROUTER_API_KEY not found in environment")
+
         if crewai_trigger_payload:
-            self.state.topic = crewai_trigger_payload.get("topic", "AI Agents")
+            self.state.topic = crewai_trigger_payload.get("topic", "Asian literature 2026")
             print(f"Using trigger payload: {crewai_trigger_payload}")
         else:
-            self.state.topic = "AI Agents"
+            self.state.topic = "Asian literature 2026"
 
         print(f"Topic: {self.state.topic}")
 
