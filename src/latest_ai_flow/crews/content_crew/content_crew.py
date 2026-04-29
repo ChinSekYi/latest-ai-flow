@@ -28,11 +28,21 @@ class ContentCrew:
                 "Missing API key. Set OPENROUTER_API_KEY (or OPENAI_API_KEY) in environment."
             )
 
-        model = os.getenv("MODEL") or os.getenv(
-            "OPENAI_MODEL_NAME", "openrouter/meta-llama/llama-3-8b-instruct"
+        # Keep both env names synced so OpenAI-compatible routing paths
+        # (used by some SDK/provider integrations) always receive auth.
+        os.environ.setdefault("OPENROUTER_API_KEY", api_key)
+        os.environ.setdefault("OPENAI_API_KEY", api_key)
+
+        model = (
+            os.getenv("OPENROUTER_MODEL")
+            or os.getenv("MODEL")
+            or os.getenv("OPENAI_MODEL_NAME")
+            or "openrouter/meta-llama/llama-3-8b-instruct"
         )
-        base_url = os.getenv("OPENAI_API_BASE") or os.getenv(
-            "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
+        base_url = (
+            os.getenv("OPENROUTER_BASE_URL")
+            or os.getenv("OPENAI_API_BASE")
+            or "https://openrouter.ai/api/v1"
         )
 
         return LLM(
