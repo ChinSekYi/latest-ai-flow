@@ -168,7 +168,7 @@ writer:
     information into clear, engaging content.
 ```
 
-Variables like `{topic}` are interpolated from `crew.kickoff(inputs={"topic": "Asian literature 2026"})`.
+Variables like `{topic}` are interpolated from `crew.kickoff(inputs={"topic": "Kelp in the UK"})`.
 
 ### tasks.yaml
 ```yaml
@@ -284,7 +284,7 @@ class MyCrew:
 from my_crew.crew import ResearchCrew
 
 def run():
-    inputs = {"topic": "Asian literature 2026"}
+    inputs = {"topic": "Kelp in the UK"}
     ResearchCrew().crew().kickoff(inputs=inputs)
 
 if __name__ == "__main__":
@@ -553,7 +553,7 @@ class ResearchState(BaseModel):
 class ResearchFlow(Flow[ResearchState]):
     @start()
     def set_topic(self):
-        self.state.topic = "Asian literature 2026"
+        self.state.topic = "Kelp in the UK"
 
     @listen(set_topic)
     def do_research(self):

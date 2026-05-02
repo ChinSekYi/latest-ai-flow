@@ -23,12 +23,10 @@ class ContentFlow(Flow[ContentState]):
         print("Planning content")
 
         if crewai_trigger_payload:
-            self.state.topic = crewai_trigger_payload.get(
-                "topic", "Asian literature 2026"
-            )
+            self.state.topic = crewai_trigger_payload.get("topic", "Kelp in the UK")
             print(f"Using trigger payload: {crewai_trigger_payload}")
         else:
-            self.state.topic = "Asian literature 2026"
+            self.state.topic = "Kelp in the UK"
 
         print(f"Topic: {self.state.topic}")
 

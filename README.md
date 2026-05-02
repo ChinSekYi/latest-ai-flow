@@ -1,6 +1,8 @@
-# {{crew_name}} Crew
+# AI Blog Writer
 
-Welcome to the {{crew_name}} Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Simple multi-agent blog/article writer built with [CrewAI](https://crewai.com).
+
+This project takes a topic, generates an outline, writes a full draft, edits it, and saves the final post.
 
 ## Installation
 
@@ -41,9 +43,9 @@ To kickstart your flow and begin execution, run this from the root folder of you
 crewai run
 ```
 
-This command initializes the latest-ai-flow Flow as defined in your configuration.
+This command runs the `ContentFlow`.
 
-This example, unmodified, will run a content creation flow on AI Agents and save the output to `output/post.md`.
+It generates an article and saves the output to `output/post.md`.
 
 ## FastAPI Wrapper (for external users)
 
@@ -65,23 +67,17 @@ uv run run_api
 Available endpoints:
 
 - `GET /health`
-- `POST /kickoff` with body `{"topic":"Asian literature"}`
+- `POST /kickoff` with body `{"topic":"Kelp in the UK"}`
 - `GET /status/{kickoff_id}`
 - `POST /generate` (kicks off + polls until `COMPLETED`/`FAILED`)
 
 Note: the deployment status path is `/status/...` (not `/stauts/...`).
 
-## Understanding Your Crew
+## How It Works
 
-The latest-ai-flow Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+The `ContentCrew` has 3 agents:
+- `planner` creates an outline
+- `writer` creates the full draft
+- `editor` polishes the final output
 
-## Support
-
-For support, questions, or feedback regarding the {{crew_name}} Crew or crewAI.
-
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
-
-Let's create wonders together with the power and simplicity of crewAI.
+Tasks are defined in `src/latest_ai_flow/crews/content_crew/config/tasks.yaml` and agent roles are in `src/latest_ai_flow/crews/content_crew/config/agents.yaml`.
