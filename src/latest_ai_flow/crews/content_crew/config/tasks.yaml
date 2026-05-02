@@ -47,4 +47,5 @@ editing_task:
     The final, polished blog post in markdown format without '```'.
     Publication-ready with clean formatting and professional prose.
   agent: editor
+  markdown: true
   output_file: output/post.md
